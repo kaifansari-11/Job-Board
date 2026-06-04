@@ -1,0 +1,16 @@
+<nav class="navbar">
+  <div class="nav-brand">JobBoard</div>
+  <div class="nav-links">
+    <% if (user) { %>
+      <span>Hello, <%= user.name %></span>
+      <% if (user.role === 'employer') { %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/jobs/new">Post Job</a>
+      <% } else { %>
+        <a href="/jobs">Browse Jobs</a>
+        <a href="/apply/my-applications">My Applications</a>
+      <% } %>
+      <a href="/auth/logout" class="btn btn-logout">Logout</a>
+    <% } %>
+  </div>
+</nav>
