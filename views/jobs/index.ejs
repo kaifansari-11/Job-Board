@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browse Jobs</title>
+  <title>Browse Jobs — JobBoard</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <%- include('../partials/navbar') %>
 
-<% if (notifications && notifications.length > 0) { %>
+  <% if (notifications && notifications.length > 0) { %>
   <div class="notif-overlay" id="notifOverlay">
     <div class="notif-popup">
       <div class="notif-icon">🔔</div>
@@ -18,9 +18,7 @@
       <div class="notif-list">
         <% notifications.forEach(n => { %>
           <div class="notif-item notif-<%= n.status %>">
-            <div class="notif-item-icon">
-              <%= n.status === 'accepted' ? '🎉' : '😔' %>
-            </div>
+            <div class="notif-item-icon"><%= n.status === 'accepted' ? '🎉' : '😔' %></div>
             <div>
               <strong><%= n.title %></strong>
               <p><%= n.company %></p>
@@ -29,19 +27,19 @@
           </div>
         <% }) %>
       </div>
-      <button class="btn" onclick="closeNotif()" style="width:100%; justify-content:center; margin-top:4px;">Got it!</button>
+      <button class="btn" onclick="closeNotif()" style="width:100%;justify-content:center;margin-top:4px;">Got it!</button>
     </div>
   </div>
-<% } %>
+  <% } %>
+
   <div class="container">
     <div class="page-header">
       <div>
         <h1>Browse Jobs</h1>
-        <p style="color:#6b7280; margin-top:4px;"><%= jobs.length %> job(s) available</p>
+        <p><%= jobs.length %> job(s) available</p>
       </div>
     </div>
 
-    <!-- Search & Filter -->
     <div class="search-bar">
       <div class="search-input-wrap">
         <span class="search-icon">🔍</span>
@@ -57,7 +55,7 @@
           data-company="<%= job.company.toLowerCase() %>"
           data-location="<%= job.location.toLowerCase() %>">
           <div class="job-card-top">
-            <div class="job-company-logo"><%= job.company.charAt(0) %></div>
+            <div class="job-company-logo"><%= job.company.charAt(0).toUpperCase() %></div>
             <div>
               <h2><%= job.title %></h2>
               <p class="company"><%= job.company %></p>
@@ -66,7 +64,7 @@
           <p class="location">📍 <%= job.location %></p>
           <p class="applicants">👥 <%= job.applicant_count %> applicant(s)</p>
           <p class="posted-by">Posted by <%= job.employer_name %></p>
-          <a href="/jobs/<%= job.id %>" class="btn" style="margin-top:auto;">View Details →</a>
+          <a href="/jobs/<%= job.id %>" class="btn">View Details →</a>
         </div>
       <% }) %>
     </div>
@@ -90,34 +88,21 @@
       cards.forEach(card => {
         const titleMatch = card.dataset.title.includes(search) || card.dataset.company.includes(search);
         const locationMatch = card.dataset.location.includes(location);
-        if (titleMatch && locationMatch) {
-          card.style.display = '';
-          visible++;
-        } else {
-          card.style.display = 'none';
-        }
+        if (titleMatch && locationMatch) { card.style.display = ''; visible++; }
+        else card.style.display = 'none';
       });
       noResults.style.display = visible === 0 ? 'block' : 'none';
     }
 
     searchInput.addEventListener('input', filterJobs);
     locationFilter.addEventListener('input', filterJobs);
-  </script>
-  <script>
-  function closeNotif() {
-    const overlay = document.getElementById('notifOverlay');
-    if (overlay) {
-      overlay.style.animation = 'fadeIn 0.2s ease reverse';
-      setTimeout(() => overlay.remove(), 200);
+
+    function closeNotif() {
+      const overlay = document.getElementById('notifOverlay');
+      if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 200); }
     }
-  }
-  // also close on overlay click
-  const overlay = document.getElementById('notifOverlay');
-  if (overlay) {
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeNotif();
-    });
-  }
-</script>
+    const overlay = document.getElementById('notifOverlay');
+    if (overlay) overlay.addEventListener('click', e => { if (e.target === overlay) closeNotif(); });
+  </script>
 </body>
 </html>

@@ -1186,47 +1186,56 @@ tr:hover td { background: var(--surface-hov); }
 .notif-item strong { font-size: 16px; font-weight: 600; display: block; margin-bottom: 4px; color: #fff;}
 .notif-item p { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
 
-/* ── Responsive ── */
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .profile-layout { grid-template-columns: 1fr; }
+  .profile-card { position:static; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 768px) {
+  .navbar { padding: 0 16px; }
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
 
-  .container { padding: 24px 16px; }
+  .container { padding: 20px 14px; }
 
   .jobs-grid { grid-template-columns: 1fr; }
 
-  .form-row { grid-template-columns: 1fr; }
-
-  .profile-layout { grid-template-columns: 1fr; }
-  .profile-card { position: static; }
-
   .application-card { flex-direction: column; }
+  .app-status { width: 100%; }
 
   .dashboard-header { flex-direction: column; align-items: flex-start; }
-
   .page-header { flex-direction: column; }
 
-  .detail-card, .form-card, .profile-form-card, .profile-view, .pv-header-card, .pv-section { padding: 24px; }
+  .detail-card { padding: 22px 18px; }
+  .form-card { padding: 22px 18px; }
+  .profile-form-card { padding: 20px 16px; }
+  .profile-view { padding: 22px 18px; }
 
   .admin-stats { grid-template-columns: 1fr 1fr; }
 
-  table { font-size: 13px; }
-  th, td { padding: 12px 14px; }
-
-  .pv-header-card { flex-direction: column; }
+  .pv-header-card { padding: 20px; gap: 16px; }
   .pv-edit-btn { margin-left: 0; width: 100%; justify-content: center; }
+  .pv-section { padding: 18px; }
+
+  .card-actions { flex-direction: column; }
+  .card-actions .btn { width: 100%; justify-content: center; }
+
+  .search-bar { flex-direction: column; }
+  .search-input-wrap { min-width: 100%; }
+  .location-filter { min-width: 100%; padding-left: 14px; }
 }
 
 @media (max-width: 480px) {
-  .auth-container { padding: 32px 24px; }
+  .auth-container { padding: 24px 18px; }
   .admin-stats { grid-template-columns: 1fr; }
-  .search-bar { flex-direction: column; }
-  .card-actions { flex-direction: column; }
-  .card-actions .btn { width: 100%; justify-content: center; }
+  .notif-popup { padding: 22px 18px; }
+  .form-actions { flex-direction: column; }
+  .form-actions .btn { width: 100%; justify-content: center; }
+  .profile-view-header { flex-direction: column; align-items: flex-start; }
+  .resume-box { flex-direction: column; align-items: flex-start; }
 }
-
-
-
 
 /* =========================================
    UI FIXES & OVERRIDES
@@ -1387,5 +1396,3 @@ h1, h2, h3, .detail-card h1, .form-card h1, .page-header h1, .dashboard-header h
     color: #ffffff !important;
     transform: translateY(-2px) !important;
 }
-
-

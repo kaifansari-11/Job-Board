@@ -6,6 +6,7 @@ const { uploadAvatar, uploadResume } = require('../config/cloudinary');
 
 // GET /profile — view own profile
 router.get('/', isLoggedIn, async (req, res) => {
+  if (req.session.user.role === 'admin') return res.redirect('/admin');
   const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
   res.render('profile/index', { profile: rows[0], user: req.session.user });
 });
@@ -63,17 +64,22 @@ router.post('/upload-resume', isLoggedIn, uploadResume.single('resume'), async (
   }
 });
 
-// GET /profile/:id — view anyone's profile
+// GET /profile/:id — view SOMEONE ELSE'S profile
 router.get('/:id', isLoggedIn, async (req, res) => {
-  const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
-  if (rows.length === 0) return res.send('User not found');
-  res.render('profile/view', { profile: rows[0], user: req.session.user });
-});
-
-router.get('/', isLoggedIn, async (req, res) => {
-  if (req.session.user.role === 'admin') return res.redirect('/admin');
-  const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
-  res.render('profile/index', { profile: rows[0], user: req.session.user });
+  try {
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
+    
+    // If the user doesn't exist, throw a 404
+    if (rows.length === 0) {
+      return res.status(404).send('User not found');
+    }
+    
+    // Render the profile page, passing the requested user's data as 'profile'
+    res.render('profile/index', { profile: rows[0], user: req.session.user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading profile');
+  }
 });
 
 module.exports = router;

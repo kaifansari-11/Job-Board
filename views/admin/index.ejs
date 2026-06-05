@@ -16,7 +16,6 @@
       </div>
     </div>
 
-    <!-- Stats -->
     <div class="admin-stats">
       <div class="stat-card">
         <span class="stat-num"><%= stats.totalJobs %></span>
@@ -36,72 +35,72 @@
       </div>
     </div>
 
-    <!-- Jobs table -->
     <div class="admin-table-wrap">
       <h2>All Job Listings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Company</th>
-            <th>Posted By</th>
-            <th>Location</th>
-            <th>Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% jobs.forEach(job => { %>
-          <tr>
-            <td><strong><%= job.title %></strong></td>
-            <td><%= job.company %></td>
-            <td><%= job.employer_name %></td>
-            <td><%= job.location %></td>
-            <td><%= new Date(job.created_at).toLocaleDateString() %></td>
-            <td>
-              <form action="/admin/jobs/<%= job.id %>/delete" method="POST" style="display:inline;">
-                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this job and all its applications?')">Delete</button>
-              </form>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+        <table style="min-width: 800px;"> <thead>
+            <tr>
+              <th>Title</th>
+              <th>Company</th>
+              <th>Posted By</th>
+              <th>Location</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% jobs.forEach(job => { %>
+            <tr>
+              <td><strong><%= job.title %></strong></td>
+              <td><%= job.company %></td>
+              <td><%= job.employer_name %></td>
+              <td><%= job.location %></td>
+              <td><%= new Date(job.created_at).toLocaleDateString() %></td>
+              <td>
+                <form action="/admin/jobs/<%= job.id %>/delete" method="POST" style="display:inline;">
+                  <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this job and all its applications?')">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Users table -->
     <div class="admin-table-wrap">
       <h2>All Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Joined</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% users.forEach(u => { %>
-          <tr>
-            <td><strong><%= u.name %></strong></td>
-            <td><%= u.email %></td>
-            <td><span class="status-badge status-<%= u.role === 'employer' ? 'reviewed' : u.role === 'admin' ? 'accepted' : 'pending' %>"><%= u.role %></span></td>
-            <td><%= new Date(u.created_at).toLocaleDateString() %></td>
-            <td>
-              <% if (u.role !== 'admin') { %>
-              <form action="/admin/users/<%= u.id %>/delete" method="POST" style="display:inline;">
-                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this user and all their data?')">Delete</button>
-              </form>
-              <% } else { %>
-                <span style="color:var(--muted); font-size:12px;">Protected</span>
-              <% } %>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+        <table style="min-width: 600px;"> <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(u => { %>
+            <tr>
+              <td><strong><%= u.name %></strong></td>
+              <td><%= u.email %></td>
+              <td><span class="status-badge status-<%= u.role === 'employer' ? 'reviewed' : u.role === 'admin' ? 'accepted' : 'pending' %>"><%= u.role %></span></td>
+              <td><%= new Date(u.created_at).toLocaleDateString() %></td>
+              <td>
+                <% if (u.role !== 'admin') { %>
+                <form action="/admin/users/<%= u.id %>/delete" method="POST" style="display:inline;">
+                  <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this user and all their data?')">Delete</button>
+                </form>
+                <% } else { %>
+                  <span style="color:var(--muted); font-size:12px;">Protected</span>
+                <% } %>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <script src="/js/main.js"></script>
