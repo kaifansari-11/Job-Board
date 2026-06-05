@@ -48,7 +48,14 @@ router.post('/login', async (req, res) => {
             email: user.email,
             role: user.role,
         };
-        if (user.role === 'employer') {
+        await db.query(
+            'UPDATE users SET last_notif_check = NOW() WHERE id = ?',
+            [user.id]
+        );
+
+        if (user.role === 'admin') {
+            res.redirect('/admin');
+        } else if (user.role === 'employer') {
             res.redirect('/dashboard');
         } else {
             res.redirect('/jobs');
@@ -58,6 +65,8 @@ router.post('/login', async (req, res) => {
         res.render('auth/login', { error: 'Something went wrong.' });
     }
 });
+
+
 
 // GET /auth/logout
 router.get('/logout', (req, res) => {

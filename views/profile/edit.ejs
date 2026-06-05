@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile — JobBoard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <div class="container">
+    <a href="/profile" class="back-link">← Back to Profile</a>
+
+    <div class="form-card" style="max-width:720px;">
+      <h1>Edit Profile</h1>
+
+      <form action="/profile/update" method="POST">
+
+        <% if (user.role === 'seeker') { %>
+
+          <div class="form-section">
+            <h3>Personal Info</h3>
+            <div class="form-group">
+              <label>Bio</label>
+              <textarea name="bio" rows="3" placeholder="Tell employers about yourself..."><%= profile.bio || '' %></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" value="<%= profile.location || '' %>" placeholder="Mumbai, India"/>
+              </div>
+              <div class="form-group">
+                <label>Skills (comma separated)</label>
+                <input type="text" name="skills" value="<%= profile.skills || '' %>" placeholder="JavaScript, Node.js, MySQL"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Links</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>LinkedIn</label>
+                <input type="url" name="linkedin" value="<%= profile.linkedin || '' %>" placeholder="https://linkedin.com/in/..."/>
+              </div>
+              <div class="form-group">
+                <label>GitHub</label>
+                <input type="url" name="github" value="<%= profile.github || '' %>" placeholder="https://github.com/..."/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Portfolio</label>
+              <input type="url" name="portfolio" value="<%= profile.portfolio || '' %>" placeholder="https://yoursite.com"/>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Background</h3>
+            <div class="form-group">
+              <label>Experience</label>
+              <textarea name="experience" rows="4" placeholder="e.g. Frontend Developer at XYZ (2023-2024)"><%= profile.experience || '' %></textarea>
+            </div>
+            <div class="form-group">
+              <label>Education</label>
+              <textarea name="education" rows="3" placeholder="e.g. B.Sc Computer Science, Mumbai University"><%= profile.education || '' %></textarea>
+            </div>
+          </div>
+
+          <input type="hidden" name="company_name" value=""/>
+          <input type="hidden" name="industry" value=""/>
+          <input type="hidden" name="company_size" value=""/>
+          <input type="hidden" name="company_website" value=""/>
+          <input type="hidden" name="company_about" value=""/>
+
+        <% } else { %>
+
+          <div class="form-section">
+            <h3>Company Info</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" name="company_name" value="<%= profile.company_name || '' %>" placeholder="e.g. Google"/>
+              </div>
+              <div class="form-group">
+                <label>Industry</label>
+                <input type="text" name="industry" value="<%= profile.industry || '' %>" placeholder="e.g. Technology"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Size</label>
+                <select name="company_size">
+                  <option value="">Select size</option>
+                  <option value="1-10"    <%= profile.company_size==='1-10'    ?'selected':'' %>>1–10 employees</option>
+                  <option value="11-50"   <%= profile.company_size==='11-50'   ?'selected':'' %>>11–50 employees</option>
+                  <option value="51-200"  <%= profile.company_size==='51-200'  ?'selected':'' %>>51–200 employees</option>
+                  <option value="201-500" <%= profile.company_size==='201-500' ?'selected':'' %>>201–500 employees</option>
+                  <option value="500+"    <%= profile.company_size==='500+'    ?'selected':'' %>>500+ employees</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" value="<%= profile.location || '' %>" placeholder="Mumbai, India"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Company Website</label>
+              <input type="url" name="company_website" value="<%= profile.company_website || '' %>" placeholder="https://yourcompany.com"/>
+            </div>
+            <div class="form-group">
+              <label>About Company</label>
+              <textarea name="company_about" rows="4" placeholder="What does your company do?"><%= profile.company_about || '' %></textarea>
+            </div>
+          </div>
+
+          <input type="hidden" name="bio" value=""/>
+          <input type="hidden" name="linkedin" value=""/>
+          <input type="hidden" name="github" value=""/>
+          <input type="hidden" name="portfolio" value=""/>
+          <input type="hidden" name="skills" value=""/>
+          <input type="hidden" name="experience" value=""/>
+          <input type="hidden" name="education" value=""/>
+
+        <% } %>
+
+        <div class="form-actions">
+          <button type="submit" class="btn">Save Changes</button>
+          <a href="/profile" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

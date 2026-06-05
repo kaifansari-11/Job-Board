@@ -1,51 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Applicants</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
   <%- include('../partials/navbar') %>
-  <div class="container">
-    <a href="/dashboard" style="color:#4f46e5;">← Back to Dashboard</a>
-    <h1 style="margin: 16px 0 8px;">Applicants for: <%= job.title %></h1>
-    <p class="company" style="margin-bottom:24px;"><%= job.company %></p>
-    
-    <% if (applicants.length === 0) { %>
-      <div class="empty-state">
-        <p>No one has applied to this job yet.</p>
-      </div>
-    <% } else { %>
-      <div class="applications-list">
-        <% applicants.forEach(app => { %>
-          <div class="application-card">
-            <div class="app-info">
-              <h2><%= app.name %></h2>
-              <p class="company"><%= app.email %></p>
-              <p class="applied-date">Applied: <%= new Date(app.applied_at).toDateString() %></p>
-              <% if (app.cover_letter) { %>
-                <p class="cover-letter">"<%= app.cover_letter %>"</p>
-                <% } %>
-              </div>
-              <div class="app-status">
-                <span class="status-badge status-<%= app.status %>"><%= app.status %></span>
-                <form action="/dashboard/applicants/<%= app.id %>/status" method="POST" style="margin-top:12px;">
-                  <input type="hidden" name="jobId" value="<%= job.id %>"/>
-                  <select name="status" class="status-select">
-                    <option value="pending"    <%= app.status === 'pending'    ? 'selected' : '' %>>Pending</option>
-                    <option value="reviewed"   <%= app.status === 'reviewed'   ? 'selected' : '' %>>Reviewed</option>
-                    <option value="accepted"   <%= app.status === 'accepted'   ? 'selected' : '' %>>Accepted</option>
-                    <option value="rejected"   <%= app.status === 'rejected'   ? 'selected' : '' %>>Rejected</option>
-                  </select>
-                  <button type="submit" class="btn" style="margin-top:8px; width:100%;">Update</button>
-              </form>
-            </div>
-          </div>
-          <% }) %>
+    <div class="container">
+      <a href="/dashboard" style="color:#4f46e5;">← Back to Dashboard</a>
+      <h1 style="margin: 16px 0 8px;">Applicants for: <%= job.title %>
+      </h1>
+      <p class="company" style="margin-bottom:24px;">
+        <%= job.company %>
+      </p>
+
+      <% if (applicants.length===0) { %>
+        <div class="empty-state">
+          <p>No one has applied to this job yet.</p>
         </div>
-        <% } %>
-      </div>
-      <script src="/js/main.js"></script>
+        <% } else { %>
+          <div class="applications-list">
+            <% applicants.forEach(app=> { %>
+              <div class="application-card">
+                <div class="app-info">
+                  <h2><a href="/profile/<%= app.user_id %>" style="color:var(--text);" target="_blank">
+                      <%= app.name %> ↗
+                    </a></h2>
+                  <p class="company">
+                    <%= app.email %>
+                  </p>
+                  <p class="applied-date">Applied: <%= new Date(app.applied_at).toDateString() %>
+                  </p>
+                  <% if (app.cover_letter) { %>
+                    <p class="cover-letter">"<%= app.cover_letter %>"</p>
+                    <% } %>
+                </div>
+                <div class="app-status">
+                  <span class="status-badge status-<%= app.status %>">
+                    <%= app.status %>
+                  </span>
+
+                  <% if (app.status==='accepted' || app.status==='rejected' ) { %>
+                    <p style="font-size:12px; color:var(--muted); margin-top:10px; text-align:center;">
+                      🔒 Decision made
+                    </p>
+                    <% } else { %>
+                      <form action="/dashboard/applicants/<%= app.id %>/status" method="POST" style="margin-top:12px;">
+                        <input type="hidden" name="jobId" value="<%= job.id %>" />
+                        <select name="status" class="status-select">
+                          <option value="pending" <%=app.status==='pending' ? 'selected' : '' %>>Pending</option>
+                          <option value="reviewed" <%=app.status==='reviewed' ? 'selected' : '' %>>Reviewed</option>
+                          <option value="accepted">Accept</option>
+                          <option value="rejected">Reject</option>
+                        </select>
+                        <button type="submit" class="btn" style="margin-top:8px; width:100%;">Update</button>
+                      </form>
+                      <% } %>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+          <% } %>
+    </div>
+    <script src="/js/main.js"></script>
 </body>
+
 </html>

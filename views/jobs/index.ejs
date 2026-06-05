@@ -8,6 +8,31 @@
 </head>
 <body>
   <%- include('../partials/navbar') %>
+
+<% if (notifications && notifications.length > 0) { %>
+  <div class="notif-overlay" id="notifOverlay">
+    <div class="notif-popup">
+      <div class="notif-icon">🔔</div>
+      <h2>Application Update<% if (notifications.length > 1) { %>s<% } %></h2>
+      <p>You have <%= notifications.length %> new update<% if(notifications.length>1){%>s<%}%> on your applications:</p>
+      <div class="notif-list">
+        <% notifications.forEach(n => { %>
+          <div class="notif-item notif-<%= n.status %>">
+            <div class="notif-item-icon">
+              <%= n.status === 'accepted' ? '🎉' : '😔' %>
+            </div>
+            <div>
+              <strong><%= n.title %></strong>
+              <p><%= n.company %></p>
+              <span class="status-badge status-<%= n.status %>"><%= n.status %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+      <button class="btn" onclick="closeNotif()" style="width:100%; justify-content:center; margin-top:4px;">Got it!</button>
+    </div>
+  </div>
+<% } %>
   <div class="container">
     <div class="page-header">
       <div>
@@ -78,5 +103,21 @@
     searchInput.addEventListener('input', filterJobs);
     locationFilter.addEventListener('input', filterJobs);
   </script>
+  <script>
+  function closeNotif() {
+    const overlay = document.getElementById('notifOverlay');
+    if (overlay) {
+      overlay.style.animation = 'fadeIn 0.2s ease reverse';
+      setTimeout(() => overlay.remove(), 200);
+    }
+  }
+  // also close on overlay click
+  const overlay = document.getElementById('notifOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeNotif();
+    });
+  }
+</script>
 </body>
 </html>

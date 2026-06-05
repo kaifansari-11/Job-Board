@@ -2,26 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title><%= profile.name %>'s Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profile.name %> — JobBoard</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <%- include('../partials/navbar') %>
   <div class="container">
+    <a href="/jobs" class="back-link">← Back to Jobs</a>
     <div class="profile-view">
 
       <div class="profile-view-header">
-        <div class="avatar-circle large">
-          <%= profile.name.charAt(0).toUpperCase() %>
-        </div>
+        <% if (profile.avatar_url) { %>
+          <img src="<%= profile.avatar_url %>" class="pv-avatar-img" style="width:90px;height:90px;border-radius:50%;object-fit:cover;"/>
+        <% } else { %>
+          <div class="avatar-circle large"><%= profile.name.charAt(0).toUpperCase() %></div>
+        <% } %>
         <div class="profile-view-info">
           <h1><%= profile.name %></h1>
           <span class="role-badge"><%= profile.role %></span>
-          <% if (profile.location) { %><p>📍 <%= profile.location %></p><% } %>
+          <% if (profile.location) { %><p style="color:var(--muted);font-size:14px;margin-top:6px;">📍 <%= profile.location %></p><% } %>
           <div class="profile-links">
-            <% if (profile.linkedin) { %><a href="<%= profile.linkedin %>" target="_blank" class="link-btn">LinkedIn</a><% } %>
-            <% if (profile.github) { %><a href="<%= profile.github %>" target="_blank" class="link-btn">GitHub</a><% } %>
-            <% if (profile.portfolio) { %><a href="<%= profile.portfolio %>" target="_blank" class="link-btn">Portfolio</a><% } %>
+            <% if (profile.linkedin)        { %><a href="<%= profile.linkedin %>"        target="_blank" class="link-btn">LinkedIn</a><% } %>
+            <% if (profile.github)          { %><a href="<%= profile.github %>"          target="_blank" class="link-btn">GitHub</a><% } %>
+            <% if (profile.portfolio)       { %><a href="<%= profile.portfolio %>"       target="_blank" class="link-btn">Portfolio</a><% } %>
             <% if (profile.company_website) { %><a href="<%= profile.company_website %>" target="_blank" class="link-btn">Website</a><% } %>
           </div>
         </div>
@@ -30,56 +34,65 @@
       <% if (profile.role === 'seeker') { %>
 
         <% if (profile.bio) { %>
-          <div class="profile-section">
-            <h3>About</h3>
-            <p><%= profile.bio %></p>
-          </div>
+        <div class="profile-section">
+          <h3>About</h3>
+          <p><%= profile.bio %></p>
+        </div>
         <% } %>
 
         <% if (profile.skills) { %>
-          <div class="profile-section">
-            <h3>Skills</h3>
-            <div class="skills-container">
-              <% profile.skills.split(',').forEach(skill => { %>
-                <span class="skill-tag"><%= skill.trim() %></span>
-              <% }) %>
-            </div>
+        <div class="profile-section">
+          <h3>Skills</h3>
+          <div class="skills-container" style="justify-content:flex-start;">
+            <% profile.skills.split(',').forEach(s => { %>
+              <span class="skill-tag"><%= s.trim() %></span>
+            <% }) %>
           </div>
+        </div>
         <% } %>
 
         <% if (profile.experience) { %>
-          <div class="profile-section">
-            <h3>Experience</h3>
-            <p style="white-space: pre-wrap;"><%= profile.experience %></p>
-          </div>
+        <div class="profile-section">
+          <h3>Experience</h3>
+          <p style="white-space:pre-wrap;"><%= profile.experience %></p>
+        </div>
         <% } %>
 
         <% if (profile.education) { %>
-          <div class="profile-section">
-            <h3>Education</h3>
-            <p style="white-space: pre-wrap;"><%= profile.education %></p>
+        <div class="profile-section">
+          <h3>Education</h3>
+          <p style="white-space:pre-wrap;"><%= profile.education %></p>
+        </div>
+        <% } %>
+
+        <% if (profile.resume_url) { %>
+        <div class="profile-section">
+          <h3>Resume</h3>
+          <div class="resume-box">
+            <span>📄 Resume available</span>
+            <a href="<%= profile.resume_url %>" target="_blank" class="btn btn-sm">View Resume</a>
           </div>
+        </div>
         <% } %>
 
       <% } else { %>
 
         <% if (profile.company_about) { %>
-          <div class="profile-section">
-            <h3>About <%= profile.company_name || profile.name %></h3>
-            <p><%= profile.company_about %></p>
-          </div>
+        <div class="profile-section">
+          <h3>About <%= profile.company_name || profile.name %></h3>
+          <p><%= profile.company_about %></p>
+        </div>
         <% } %>
 
         <% if (profile.industry) { %>
-          <div class="profile-section">
-            <h3>Details</h3>
-            <p>🏢 Industry: <%= profile.industry %></p>
-            <% if (profile.company_size) { %><p>👥 Size: <%= profile.company_size %> employees</p><% } %>
-          </div>
+        <div class="profile-section">
+          <h3>Details</h3>
+          <% if (profile.industry)     { %><p>🏢 Industry: <strong><%= profile.industry %></strong></p><% } %>
+          <% if (profile.company_size) { %><p>👥 Size: <strong><%= profile.company_size %> employees</strong></p><% } %>
+        </div>
         <% } %>
 
       <% } %>
-
     </div>
   </div>
   <script src="/js/main.js"></script>

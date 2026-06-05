@@ -3,20 +3,43 @@ const router = express.Router();
 const db = require('../db');
 const isLoggedIn = require('../middleware/isLoggedIn');
 
+async function getNotifications(userId) {
+  const [rows] = await db.query(
+    `SELECT applications.status, jobs.title, jobs.company
+     FROM applications
+     JOIN jobs ON applications.job_id = jobs.id
+     WHERE applications.user_id = ?
+     AND applications.status IN ('accepted', 'rejected')
+     AND applications.updated_at > (SELECT last_notif_check FROM users WHERE id = ?)`,
+    [userId, userId]
+  );
+  return rows;
+}
+
 router.get('/', isLoggedIn, async (req, res) => {
   try {
     const [jobs] = await db.query(
       `SELECT jobs.id, jobs.title, jobs.company, jobs.location, jobs.description,
-   jobs.user_id, jobs.created_at, users.name as employer_name,
-   COUNT(applications.id) as applicant_count
-   FROM jobs
-   JOIN users ON jobs.user_id = users.id
-   LEFT JOIN applications ON jobs.id = applications.job_id
-   GROUP BY jobs.id, jobs.title, jobs.company, jobs.location, jobs.description,
-   jobs.user_id, jobs.created_at, users.name
-   ORDER BY jobs.created_at DESC`
+       jobs.user_id, jobs.created_at, users.name as employer_name,
+       COUNT(applications.id) as applicant_count
+       FROM jobs
+       JOIN users ON jobs.user_id = users.id
+       LEFT JOIN applications ON jobs.id = applications.job_id
+       GROUP BY jobs.id, jobs.title, jobs.company, jobs.location, jobs.description,
+       jobs.user_id, jobs.created_at, users.name
+       ORDER BY jobs.created_at DESC`
     );
-    res.render('jobs/index', { jobs, user: req.session.user });
+
+    let notifications = [];
+    if (req.session.user.role === 'seeker') {
+      notifications = await getNotifications(req.session.user.id);
+      // reset the check time so notifs don't show again
+      if (notifications.length > 0) {
+        await db.query('UPDATE users SET last_notif_check = NOW() WHERE id = ?', [req.session.user.id]);
+      }
+    }
+
+    res.render('jobs/index', { jobs, user: req.session.user, notifications });
   } catch (err) {
     console.error(err);
     res.send('Error loading jobs');
@@ -105,11 +128,13 @@ router.post('/:id/update', isLoggedIn, async (req, res) => {
 router.post('/:id/delete', isLoggedIn, async (req, res) => {
   if (req.session.user.role !== 'employer') return res.redirect('/jobs');
   try {
+    // delete applications first, then the job
+    await db.query('DELETE FROM applications WHERE job_id = ?', [req.params.id]);
     await db.query('DELETE FROM jobs WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
     res.redirect('/dashboard');
   } catch (err) {
     console.error(err);
-    res.send('Error deleting job');
+    res.send('Error deleting job: ' + err.message);
   }
 });
 

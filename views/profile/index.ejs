@@ -2,153 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — JobBoard</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <%- include('../partials/navbar') %>
   <div class="container">
-    <% if (success) { %>
-      <div class="alert-success"><%= success %></div>
+
+    <% if (locals.success) { %>
+      <div class="alert-success">✓ Profile updated successfully!</div>
     <% } %>
 
-    <div class="profile-layout">
+    <div class="profile-view-page">
 
-      <!-- Left: Profile Card -->
-      <div class="profile-card">
-        <div class="avatar-circle">
-          <%= user.name.charAt(0).toUpperCase() %>
+      <!-- Header card -->
+      <div class="pv-header-card">
+        <div class="pv-avatar-wrap">
+          <% if (profile.avatar_url) { %>
+            <img src="<%= profile.avatar_url %>" alt="Avatar" class="pv-avatar-img"/>
+          <% } else { %>
+            <div class="pv-avatar-placeholder"><%= profile.name.charAt(0).toUpperCase() %></div>
+          <% } %>
+          <!-- Quick avatar upload -->
+          <form action="/profile/upload-avatar" method="POST" enctype="multipart/form-data" class="avatar-upload-form">
+            <label class="avatar-upload-btn" title="Change photo">
+              📷
+              <input type="file" name="avatar" accept="image/*" onchange="this.form.submit()" style="display:none"/>
+            </label>
+          </form>
         </div>
-        <h2><%= user.name %></h2>
-        <span class="role-badge"><%= user.role %></span>
-        <% if (profile.location) { %><p>📍 <%= profile.location %></p><% } %>
-        <% if (profile.linkedin) { %><a href="<%= profile.linkedin %>" target="_blank">LinkedIn</a><% } %>
-        <% if (profile.github) { %><a href="<%= profile.github %>" target="_blank">GitHub</a><% } %>
-        <% if (profile.portfolio) { %><a href="<%= profile.portfolio %>" target="_blank">Portfolio</a><% } %>
-        <% if (user.role === 'seeker' && profile.skills) { %>
-          <div class="skills-container">
-            <% profile.skills.split(',').forEach(skill => { %>
-              <span class="skill-tag"><%= skill.trim() %></span>
-            <% }) %>
+
+        <div class="pv-header-info">
+          <h1><%= profile.name %></h1>
+          <span class="role-badge"><%= profile.role %></span>
+          <% if (profile.location) { %>
+            <p class="pv-location">📍 <%= profile.location %></p>
+          <% } %>
+          <% if (profile.bio || profile.company_about) { %>
+            <p class="pv-bio"><%= profile.bio || profile.company_about %></p>
+          <% } %>
+          <div class="profile-links">
+            <% if (profile.linkedin)        { %><a href="<%= profile.linkedin %>"        target="_blank" class="link-btn">LinkedIn</a><% } %>
+            <% if (profile.github)          { %><a href="<%= profile.github %>"          target="_blank" class="link-btn">GitHub</a><% } %>
+            <% if (profile.portfolio)       { %><a href="<%= profile.portfolio %>"       target="_blank" class="link-btn">Portfolio</a><% } %>
+            <% if (profile.company_website) { %><a href="<%= profile.company_website %>" target="_blank" class="link-btn">Website</a><% } %>
           </div>
-        <% } %>
+        </div>
+
+        <a href="/profile/edit" class="btn pv-edit-btn">✏️ Edit Profile</a>
       </div>
 
-      <!-- Right: Edit Form -->
-      <div class="profile-form-card">
-        <h2>Edit Profile</h2>
-        <form action="/profile/update" method="POST">
+      <!-- Content -->
+      <div class="pv-content">
 
-          <% if (user.role === 'seeker') { %>
-            <div class="form-section">
-              <h3>Personal Info</h3>
-              <div class="form-group">
-                <label>Bio</label>
-                <textarea name="bio" rows="3" placeholder="Tell employers about yourself..."><%= profile.bio || '' %></textarea>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Location</label>
-                  <input type="text" name="location" value="<%= profile.location || '' %>" placeholder="Mumbai, India"/>
-                </div>
-                <div class="form-group">
-                  <label>Skills (comma separated)</label>
-                  <input type="text" name="skills" value="<%= profile.skills || '' %>" placeholder="JavaScript, Node.js, MySQL"/>
-                </div>
-              </div>
+        <% if (profile.role === 'seeker') { %>
+
+          <% if (profile.skills) { %>
+          <div class="pv-section">
+            <h3>Skills</h3>
+            <div class="skills-container" style="justify-content:flex-start;">
+              <% profile.skills.split(',').forEach(s => { %>
+                <span class="skill-tag"><%= s.trim() %></span>
+              <% }) %>
             </div>
-
-            <div class="form-section">
-              <h3>Links</h3>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>LinkedIn URL</label>
-                  <input type="url" name="linkedin" value="<%= profile.linkedin || '' %>" placeholder="https://linkedin.com/in/..."/>
-                </div>
-                <div class="form-group">
-                  <label>GitHub URL</label>
-                  <input type="url" name="github" value="<%= profile.github || '' %>" placeholder="https://github.com/..."/>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Portfolio URL</label>
-                <input type="url" name="portfolio" value="<%= profile.portfolio || '' %>" placeholder="https://yoursite.com"/>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <h3>Experience & Education</h3>
-              <div class="form-group">
-                <label>Experience</label>
-                <textarea name="experience" rows="4" placeholder="e.g. Frontend Developer at XYZ (2023-2024)..."><%= profile.experience || '' %></textarea>
-              </div>
-              <div class="form-group">
-                <label>Education</label>
-                <textarea name="education" rows="3" placeholder="e.g. B.Sc Computer Science, Mumbai University (2023-2026)"><%= profile.education || '' %></textarea>
-              </div>
-            </div>
-
-            <!-- Hidden employer fields -->
-            <input type="hidden" name="company_name" value=""/>
-            <input type="hidden" name="industry" value=""/>
-            <input type="hidden" name="company_size" value=""/>
-            <input type="hidden" name="company_website" value=""/>
-            <input type="hidden" name="company_about" value=""/>
-
-          <% } else { %>
-
-            <div class="form-section">
-              <h3>Company Info</h3>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Company Name</label>
-                  <input type="text" name="company_name" value="<%= profile.company_name || '' %>" placeholder="e.g. Google"/>
-                </div>
-                <div class="form-group">
-                  <label>Industry</label>
-                  <input type="text" name="industry" value="<%= profile.industry || '' %>" placeholder="e.g. Technology"/>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Company Size</label>
-                  <select name="company_size">
-                    <option value="">Select size</option>
-                    <option value="1-10"      <%= profile.company_size === '1-10'      ? 'selected':'' %>>1-10 employees</option>
-                    <option value="11-50"     <%= profile.company_size === '11-50'     ? 'selected':'' %>>11-50 employees</option>
-                    <option value="51-200"    <%= profile.company_size === '51-200'    ? 'selected':'' %>>51-200 employees</option>
-                    <option value="201-500"   <%= profile.company_size === '201-500'   ? 'selected':'' %>>201-500 employees</option>
-                    <option value="500+"      <%= profile.company_size === '500+'      ? 'selected':'' %>>500+ employees</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Location</label>
-                  <input type="text" name="location" value="<%= profile.location || '' %>" placeholder="Mumbai, India"/>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Company Website</label>
-                <input type="url" name="company_website" value="<%= profile.company_website || '' %>" placeholder="https://yourcompany.com"/>
-              </div>
-              <div class="form-group">
-                <label>About Company</label>
-                <textarea name="company_about" rows="4" placeholder="What does your company do?"><%= profile.company_about || '' %></textarea>
-              </div>
-            </div>
-
-            <!-- Hidden seeker fields -->
-            <input type="hidden" name="bio" value=""/>
-            <input type="hidden" name="linkedin" value=""/>
-            <input type="hidden" name="github" value=""/>
-            <input type="hidden" name="portfolio" value=""/>
-            <input type="hidden" name="skills" value=""/>
-            <input type="hidden" name="experience" value=""/>
-            <input type="hidden" name="education" value=""/>
-
+          </div>
           <% } %>
 
-          <button type="submit" class="btn">Save Profile</button>
-        </form>
+          <% if (profile.experience) { %>
+          <div class="pv-section">
+            <h3>Experience</h3>
+            <p style="white-space:pre-wrap;"><%= profile.experience %></p>
+          </div>
+          <% } %>
+
+          <% if (profile.education) { %>
+          <div class="pv-section">
+            <h3>Education</h3>
+            <p style="white-space:pre-wrap;"><%= profile.education %></p>
+          </div>
+          <% } %>
+
+          <!-- Resume -->
+          <div class="pv-section">
+            <h3>Resume</h3>
+            <% if (profile.resume_url) { %>
+              <div class="resume-box">
+                <span>📄 Resume uploaded</span>
+                <a href="<%= profile.resume_url %>" target="_blank" class="btn btn-sm">View Resume</a>
+              </div>
+            <% } else { %>
+              <p style="color:var(--muted); margin-bottom:12px;">No resume uploaded yet.</p>
+            <% } %>
+            <form action="/profile/upload-resume" method="POST" enctype="multipart/form-data" class="resume-upload-form">
+              <label class="resume-upload-label">
+                <input type="file" name="resume" accept=".pdf" onchange="this.form.submit()"/>
+                📎 <%= profile.resume_url ? 'Replace Resume (PDF)' : 'Upload Resume (PDF)' %>
+              </label>
+            </form>
+          </div>
+
+        <% } else { %>
+
+          <% if (profile.industry || profile.company_size) { %>
+          <div class="pv-section">
+            <h3>Company Details</h3>
+            <% if (profile.industry)     { %><p>🏢 Industry: <strong><%= profile.industry %></strong></p><% } %>
+            <% if (profile.company_size) { %><p>👥 Size: <strong><%= profile.company_size %> employees</strong></p><% } %>
+            <% if (profile.company_name) { %><p>🏷️ Company: <strong><%= profile.company_name %></strong></p><% } %>
+          </div>
+          <% } %>
+
+        <% } %>
+
       </div>
     </div>
   </div>

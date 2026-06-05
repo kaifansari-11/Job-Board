@@ -2,26 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — JobBoard</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/landing.css">
 </head>
 <body>
-  <div class="auth-container">
-    <h1>Create Account</h1>
-    <% if (error) { %>
-      <p class="error"><%= error %></p>
-      <% } %>
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <span class="auth-logo">⚡ JobBoard</span>
+      <h1>Create account</h1>
+      <p class="auth-sub">Join thousands of seekers and employers</p>
+      <% if (error) { %><div class="error"><%= error %></div><% } %>
       <form action="/auth/register" method="POST">
-        <input type="text" name="name" placeholder="Full Name" required />
-        <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <select name="role">
-        <option value="seeker">Job Seeker</option>
-        <option value="employer">Employer</option>
-      </select>
-      <button type="submit" class="btn">Register</button>
-    </form>
-    <a href="/auth/login">Already have an account? Login</a>
+        <input type="text" name="name" placeholder="Full name" required />
+        <input type="email" name="email" placeholder="Email address" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <select name="role">
+          <option value="seeker">👤 Job Seeker — I'm looking for a job</option>
+          <option value="employer">🏢 Employer — I want to hire</option>
+        </select>
+        <button type="submit" class="btn">Create Account</button>
+      </form>
+      <a href="/auth/login" class="auth-link">Already have an account? Sign in →</a>
+    </div>
   </div>
+  <script src="/js/main.js"></script>
 </body>
 </html>

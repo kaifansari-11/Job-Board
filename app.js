@@ -23,6 +23,7 @@ app.use('/jobs', require('./routes/jobs'));
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/apply', require('./routes/apply'));
 app.use('/profile', require('./routes/profile'));
+app.use('/admin', require('./routes/admin'));
 
 app.get('/', (req, res) => {
   res.render('index', { user: null });
