@@ -21,9 +21,11 @@ app.use(session({
 app.use('/auth', require('./routes/auth'));
 app.use('/jobs', require('./routes/jobs'));
 app.use('/dashboard', require('./routes/dashboard'));
+app.use('/apply', require('./routes/apply'));
+app.use('/profile', require('./routes/profile'));
 
 app.get('/', (req, res) => {
-  res.redirect('/auth/login');
+  res.render('index', { user: null });
 });
 
 app.listen(3000, () => {

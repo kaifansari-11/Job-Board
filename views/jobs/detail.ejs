@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Detail</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <div class="container">
+    <div class="detail-card">
+      <h1><%= job.title %></h1>
+      <p class="company"><%= job.company %></p>
+      <p class="location">📍 <%= job.location %></p>
+      <p class="posted-by">Posted by <%= job.employer_name %></p>
+      <hr/>
+      <div class="description">
+        <h3>Job Description</h3>
+        <p><%= job.description %></p>
+      </div>
+      
+      <% if (user.role === 'seeker') { %>
+        <div style="margin-top: 24px;">
+          <% if (alreadyApplied) { %>
+            <button class="btn" disabled style="background:#6b7280;">✓ Already Applied</button>
+            <% } else { %>
+              <form action="/apply/<%= job.id %>" method="POST">
+                <div class="form-group">
+                  <label>Cover Letter (optional)</label>
+                  <textarea name="cover_letter" rows="4" placeholder="Tell the employer why you're a great fit..."></textarea>
+                </div>
+              <button type="submit" class="btn">Apply Now</button>
+            </form>
+            <% } %>
+          </div>
+          <% } %>
+          
+          <% if (user.role === 'employer' && user.id === job.user_id) { %>
+            <div style="margin-top: 24px; display:flex; gap:12px;">
+              <a href="/jobs/<%= job.id %>/edit" class="btn btn-secondary">Edit Job</a>
+              <form action="/jobs/<%= job.id %>/delete" method="POST">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('Delete this job?')">Delete Job</button>
+              </form>
+            </div>
+            <% } %>
+            
+            <div style="margin-top: 20px;">
+              <a href="/jobs" style="color:#4f46e5;">← Back to Jobs</a>
+            </div>
+          </div>
+        </div>
+      <script src="/js/main.js"></script>
+</body>
+</html>

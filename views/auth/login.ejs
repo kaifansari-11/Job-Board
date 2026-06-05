@@ -10,13 +10,13 @@
     <h1>Welcome Back</h1>
     <% if (error) { %>
       <p class="error"><%= error %></p>
-    <% } %>
-    <form action="/auth/login" method="POST">
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit" class="btn">Login</button>
-    </form>
-    <a href="/auth/register">Don't have an account? Register</a>
-  </div>
+      <% } %>
+      <form action="/auth/login" method="POST">
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit" class="btn">Login</button>
+      </form>
+      <a href="/auth/register">Don't have an account? Register</a>
+    </div>
 </body>
 </html>

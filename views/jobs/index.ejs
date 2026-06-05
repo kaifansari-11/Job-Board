@@ -2,28 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Jobs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Jobs</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <%- include('../partials/navbar') %>
   <div class="container">
-    <h1>Available Jobs</h1>
-    <% if (jobs.length === 0) { %>
-      <p>No jobs posted yet.</p>
-    <% } else { %>
-      <div class="jobs-grid">
-        <% jobs.forEach(job => { %>
-          <div class="job-card">
-            <h2><%= job.title %></h2>
-            <p class="company"><%= job.company %></p>
-            <p class="location">📍 <%= job.location %></p>
-            <p class="posted-by">Posted by <%= job.employer_name %></p>
-            <a href="/jobs/<%= job.id %>" class="btn">View Details</a>
-          </div>
-        <% }) %>
+    <div class="page-header">
+      <div>
+        <h1>Browse Jobs</h1>
+        <p style="color:#6b7280; margin-top:4px;"><%= jobs.length %> job(s) available</p>
       </div>
-    <% } %>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search by job title or company..."/>
+      </div>
+      <input type="text" id="locationFilter" placeholder="📍 Filter by location..." class="location-filter"/>
+    </div>
+
+    <div class="jobs-grid" id="jobsGrid">
+      <% jobs.forEach(job => { %>
+        <div class="job-card"
+          data-title="<%= job.title.toLowerCase() %>"
+          data-company="<%= job.company.toLowerCase() %>"
+          data-location="<%= job.location.toLowerCase() %>">
+          <div class="job-card-top">
+            <div class="job-company-logo"><%= job.company.charAt(0) %></div>
+            <div>
+              <h2><%= job.title %></h2>
+              <p class="company"><%= job.company %></p>
+            </div>
+          </div>
+          <p class="location">📍 <%= job.location %></p>
+          <p class="applicants">👥 <%= job.applicant_count %> applicant(s)</p>
+          <p class="posted-by">Posted by <%= job.employer_name %></p>
+          <a href="/jobs/<%= job.id %>" class="btn" style="margin-top:auto;">View Details →</a>
+        </div>
+      <% }) %>
+    </div>
+
+    <div id="noResults" style="display:none;" class="empty-state">
+      <p>No jobs match your search.</p>
+    </div>
   </div>
+
+  <script src="/js/main.js"></script>
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const locationFilter = document.getElementById('locationFilter');
+    const cards = document.querySelectorAll('.job-card');
+    const noResults = document.getElementById('noResults');
+
+    function filterJobs() {
+      const search = searchInput.value.toLowerCase();
+      const location = locationFilter.value.toLowerCase();
+      let visible = 0;
+      cards.forEach(card => {
+        const titleMatch = card.dataset.title.includes(search) || card.dataset.company.includes(search);
+        const locationMatch = card.dataset.location.includes(location);
+        if (titleMatch && locationMatch) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      noResults.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', filterJobs);
+    locationFilter.addEventListener('input', filterJobs);
+  </script>
 </body>
 </html>

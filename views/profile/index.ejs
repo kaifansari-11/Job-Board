@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <div class="container">
+    <% if (success) { %>
+      <div class="alert-success"><%= success %></div>
+    <% } %>
+
+    <div class="profile-layout">
+
+      <!-- Left: Profile Card -->
+      <div class="profile-card">
+        <div class="avatar-circle">
+          <%= user.name.charAt(0).toUpperCase() %>
+        </div>
+        <h2><%= user.name %></h2>
+        <span class="role-badge"><%= user.role %></span>
+        <% if (profile.location) { %><p>📍 <%= profile.location %></p><% } %>
+        <% if (profile.linkedin) { %><a href="<%= profile.linkedin %>" target="_blank">LinkedIn</a><% } %>
+        <% if (profile.github) { %><a href="<%= profile.github %>" target="_blank">GitHub</a><% } %>
+        <% if (profile.portfolio) { %><a href="<%= profile.portfolio %>" target="_blank">Portfolio</a><% } %>
+        <% if (user.role === 'seeker' && profile.skills) { %>
+          <div class="skills-container">
+            <% profile.skills.split(',').forEach(skill => { %>
+              <span class="skill-tag"><%= skill.trim() %></span>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Right: Edit Form -->
+      <div class="profile-form-card">
+        <h2>Edit Profile</h2>
+        <form action="/profile/update" method="POST">
+
+          <% if (user.role === 'seeker') { %>
+            <div class="form-section">
+              <h3>Personal Info</h3>
+              <div class="form-group">
+                <label>Bio</label>
+                <textarea name="bio" rows="3" placeholder="Tell employers about yourself..."><%= profile.bio || '' %></textarea>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Location</label>
+                  <input type="text" name="location" value="<%= profile.location || '' %>" placeholder="Mumbai, India"/>
+                </div>
+                <div class="form-group">
+                  <label>Skills (comma separated)</label>
+                  <input type="text" name="skills" value="<%= profile.skills || '' %>" placeholder="JavaScript, Node.js, MySQL"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Links</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>LinkedIn URL</label>
+                  <input type="url" name="linkedin" value="<%= profile.linkedin || '' %>" placeholder="https://linkedin.com/in/..."/>
+                </div>
+                <div class="form-group">
+                  <label>GitHub URL</label>
+                  <input type="url" name="github" value="<%= profile.github || '' %>" placeholder="https://github.com/..."/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Portfolio URL</label>
+                <input type="url" name="portfolio" value="<%= profile.portfolio || '' %>" placeholder="https://yoursite.com"/>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Experience & Education</h3>
+              <div class="form-group">
+                <label>Experience</label>
+                <textarea name="experience" rows="4" placeholder="e.g. Frontend Developer at XYZ (2023-2024)..."><%= profile.experience || '' %></textarea>
+              </div>
+              <div class="form-group">
+                <label>Education</label>
+                <textarea name="education" rows="3" placeholder="e.g. B.Sc Computer Science, Mumbai University (2023-2026)"><%= profile.education || '' %></textarea>
+              </div>
+            </div>
+
+            <!-- Hidden employer fields -->
+            <input type="hidden" name="company_name" value=""/>
+            <input type="hidden" name="industry" value=""/>
+            <input type="hidden" name="company_size" value=""/>
+            <input type="hidden" name="company_website" value=""/>
+            <input type="hidden" name="company_about" value=""/>
+
+          <% } else { %>
+
+            <div class="form-section">
+              <h3>Company Info</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Company Name</label>
+                  <input type="text" name="company_name" value="<%= profile.company_name || '' %>" placeholder="e.g. Google"/>
+                </div>
+                <div class="form-group">
+                  <label>Industry</label>
+                  <input type="text" name="industry" value="<%= profile.industry || '' %>" placeholder="e.g. Technology"/>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Company Size</label>
+                  <select name="company_size">
+                    <option value="">Select size</option>
+                    <option value="1-10"      <%= profile.company_size === '1-10'      ? 'selected':'' %>>1-10 employees</option>
+                    <option value="11-50"     <%= profile.company_size === '11-50'     ? 'selected':'' %>>11-50 employees</option>
+                    <option value="51-200"    <%= profile.company_size === '51-200'    ? 'selected':'' %>>51-200 employees</option>
+                    <option value="201-500"   <%= profile.company_size === '201-500'   ? 'selected':'' %>>201-500 employees</option>
+                    <option value="500+"      <%= profile.company_size === '500+'      ? 'selected':'' %>>500+ employees</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Location</label>
+                  <input type="text" name="location" value="<%= profile.location || '' %>" placeholder="Mumbai, India"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Company Website</label>
+                <input type="url" name="company_website" value="<%= profile.company_website || '' %>" placeholder="https://yourcompany.com"/>
+              </div>
+              <div class="form-group">
+                <label>About Company</label>
+                <textarea name="company_about" rows="4" placeholder="What does your company do?"><%= profile.company_about || '' %></textarea>
+              </div>
+            </div>
+
+            <!-- Hidden seeker fields -->
+            <input type="hidden" name="bio" value=""/>
+            <input type="hidden" name="linkedin" value=""/>
+            <input type="hidden" name="github" value=""/>
+            <input type="hidden" name="portfolio" value=""/>
+            <input type="hidden" name="skills" value=""/>
+            <input type="hidden" name="experience" value=""/>
+            <input type="hidden" name="education" value=""/>
+
+          <% } %>
+
+          <button type="submit" class="btn">Save Profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

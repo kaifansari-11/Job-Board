@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobBoard — Find Your Dream Job</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body class="landing-body">
+
+  <!-- Navbar -->
+  <nav class="landing-nav">
+    <div class="landing-nav-inner">
+      <div class="nav-brand">⚡ JobBoard</div>
+      <div class="landing-nav-links">
+        <a href="/auth/login">Login</a>
+        <a href="/auth/register" class="btn">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🚀 The smarter way to hire & get hired</div>
+      <h1 class="hero-title">
+        Find Jobs That <span class="highlight">Actually</span> Match You
+      </h1>
+      <p class="hero-sub">
+        Connect with top employers, apply in seconds, and land your dream role.
+        Employers — post jobs and find the right talent fast.
+      </p>
+      <div class="hero-btns">
+        <a href="/auth/register" class="btn btn-large">Find Jobs →</a>
+        <a href="/auth/register?role=employer" class="btn btn-large btn-outline">Post a Job</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" id="jobCount">0</span><span>Jobs Posted</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num" id="seekerCount">0</span><span>Job Seekers</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num" id="employerCount">0</span><span>Companies</span></div>
+      </div>
+    </div>
+    <div class="hero-graphic">
+      <div class="floating-card fc1">
+        <div class="fc-icon">💻</div>
+        <div><strong>Frontend Developer</strong><p>Google • Remote</p></div>
+      </div>
+      <div class="floating-card fc2">
+        <div class="fc-icon">📊</div>
+        <div><strong>Data Analyst</strong><p>Microsoft • Mumbai</p></div>
+      </div>
+      <div class="floating-card fc3">
+        <div class="fc-icon">🎨</div>
+        <div><strong>UI/UX Designer</strong><p>Figma • Bangalore</p></div>
+      </div>
+      <div class="floating-card fc4">
+        <div class="fc-icon">⚙️</div>
+        <div><strong>Backend Engineer</strong><p>Razorpay • Pune</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="section-inner">
+      <div class="section-label">WHY JOBBOARD</div>
+      <h2 class="section-title">Everything you need to hire or get hired</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Smart Job Matching</h3>
+          <p>Browse jobs filtered by your skills, location, and preferences. No noise, just relevant opportunities.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Apply in Seconds</h3>
+          <p>One-click applications with your profile. Employers see your skills, experience and links instantly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Track Applications</h3>
+          <p>Know exactly where you stand — pending, reviewed, accepted or rejected, all in one dashboard.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏢</div>
+          <h3>Employer Dashboard</h3>
+          <p>Post jobs, manage listings and review applicants with full profile visibility from one place.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure & Private</h3>
+          <p>Your data is encrypted and protected. Only employers you apply to can see your full profile.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Works Everywhere</h3>
+          <p>Fully responsive on mobile, tablet and desktop. Job hunt from anywhere, anytime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how-it-works">
+    <div class="section-inner">
+      <div class="section-label">HOW IT WORKS</div>
+      <h2 class="section-title">Get started in 3 simple steps</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">01</div>
+          <h3>Create your profile</h3>
+          <p>Sign up as a job seeker or employer. Fill in your skills, experience, and what you're looking for.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <h3>Browse or Post Jobs</h3>
+          <p>Seekers explore hundreds of listings. Employers post roles and get matched with the right candidates.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <h3>Get Hired or Hire</h3>
+          <p>Apply with one click, track your status, and land your dream role — or find your perfect hire.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="section-inner cta-inner">
+      <h2>Ready to take the next step?</h2>
+      <p>Join thousands of job seekers and employers already using JobBoard.</p>
+      <div class="hero-btns">
+        <a href="/auth/register" class="btn btn-large">Create Free Account →</a>
+        <a href="/auth/login" class="btn btn-large btn-outline-white">Login</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="nav-brand">⚡ JobBoard</div>
+      <p>Built with Node.js, Express, MySQL & EJS</p>
+      <p style="margin-top:6px; color:#6b7280;">© 2026 JobBoard. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Animate stats counter
+    function animateCount(el, target, duration) {
+      let start = 0;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) { el.textContent = target + '+'; clearInterval(timer); return; }
+        el.textContent = Math.floor(start) + '+';
+      }, 16);
+    }
+    window.addEventListener('load', () => {
+      animateCount(document.getElementById('jobCount'), 50, 1500);
+      animateCount(document.getElementById('seekerCount'), 120, 1500);
+      animateCount(document.getElementById('employerCount'), 30, 1500);
+    });
+  </script>
+</body>
+</html>

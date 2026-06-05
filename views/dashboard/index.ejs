@@ -12,22 +12,32 @@
       <h1>Welcome, <%= user.name %></h1>
       <a href="/jobs/new" class="btn">+ Post a Job</a>
     </div>
-    <h2>Your Job Listings</h2>
+    <h2 style="margin-bottom: 20px;">Your Job Listings</h2>
     <% if (jobs.length === 0) { %>
-      <p>You haven't posted any jobs yet. <a href="/jobs/new">Post your first job</a></p>
-    <% } else { %>
-      <div class="jobs-grid">
-        <% jobs.forEach(job => { %>
-          <div class="job-card">
-            <h2><%= job.title %></h2>
+      <div class="empty-state">
+        <p>You haven't posted any jobs yet.</p>
+        <a href="/jobs/new" class="btn" style="margin-top:16px;">Post your first job</a>
+      </div>
+      <% } else { %>
+        <div class="jobs-grid">
+          <% jobs.forEach(job => { %>
+            <div class="job-card">
+              <h2><%= job.title %></h2>
             <p class="company"><%= job.company %></p>
             <p class="location">📍 <%= job.location %></p>
-            <a href="/jobs/<%= job.id %>" class="btn">View</a>
-            <a href="/jobs/<%= job.id %>/edit" class="btn btn-secondary">Edit</a>
+            <p class="applicants">👥 <%= job.applicant_count %> applicant(s)</p>
+            <div class="card-actions">
+              <a href="/dashboard/applicants/<%= job.id %>" class="btn">View Applicants</a>
+              <a href="/jobs/<%= job.id %>/edit" class="btn btn-secondary">Edit</a>
+              <form action="/jobs/<%= job.id %>/delete" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-logout" onclick="return confirm('Delete this job?')">Delete</button>
+              </form>
+            </div>
           </div>
-        <% }) %>
+          <% }) %>
+        </div>
+        <% } %>
       </div>
-    <% } %>
-  </div>
-</body>
-</html>
+      <script src="/js/main.js"></script>
+    </body>
+    </html>
